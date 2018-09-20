@@ -6,15 +6,18 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
-public class Reader extends Thread {
+/**
+ * Читает источник, разбирает его на предложения и отдает обработчику(Handler)
+ */
+public class SequenceParser extends Thread {
 
     private String urlSource;
     private String pathToFile;
-    private  HashSet<String> searchWords;
+    private HashSet<String> searchWords;
 
     public final static int SEQUENCE_COUNT = 100;
 
-    public Reader(String urlSource, String pathToFile, HashSet<String> hashSet) {
+    public SequenceParser(String urlSource, String pathToFile, HashSet<String> hashSet) {
         this.urlSource = urlSource;
         this.pathToFile = pathToFile;
         this.searchWords = hashSet;
@@ -28,15 +31,15 @@ public class Reader extends Thread {
             URL url = new URL(urlSource);
             Scanner scanner = new Scanner(url.openStream());
             scanner.useDelimiter("[.|!|?]");
-            while(scanner.hasNext()) {
+            while (scanner.hasNext()) {
                 sequences.add(scanner.next());
-                if (sequences.size() == SEQUENCE_COUNT) {
-                    Handler handler = new Handler(sequences, searchWords, pathToFile);
+                if (sequences.size() >= SEQUENCE_COUNT) {
+                    Handler handler = new Handler(new ArrayList<>(sequences), searchWords, pathToFile);
                     handler.start();
                     sequences.clear();
                 }
             }
-            if(sequences.size() != 0) {
+            if (sequences.size() != 0) {
                 Handler handler = new Handler(sequences, searchWords, pathToFile);
                 handler.start();
             }

@@ -1,6 +1,12 @@
 package ru.innopolis;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
 public class Main {
+
     public static void main(String[] args) {
         String packageName = "file://" + System.getenv("PWD") + "/sources/";
         String[] sources = {
@@ -10,13 +16,11 @@ public class Main {
                 packageName + "Blesk_i_niweta_informacionnyh_tehnologij._Pochemu_IT_ne_javljajutsja_konkurentnym_preimuwestvom.txt",
                 packageName + "Catching Fire.txt",
         };
-
-        String[] words = {"любовь", "программирование", "работа", "fire"};
+        String[] words = {"любовь", "программирование", "работа", "fire", "командной строки"};
         String res = "result.txt";
 
-        WordFinder wordFinder = new WordFinder();
-
-        wordFinder.getOccurencies(sources, words, res);
+        Main main = new Main();
+        main.getOccurencies(sources, words, res);
 
 /*        URL url = new URL(sources[2]);
         InputStream inputStream = url.openStream();
@@ -24,5 +28,19 @@ public class Main {
         while (scanner.hasNext()) {
             System.out.println(scanner.next());
         }*/
+    }
+
+    void getOccurencies(String[] sources, String[] words, String res) {
+        File file = new File(res);
+        if (file.exists()) {
+            file.delete();
+        }
+        List<String> strings = Arrays.asList(words);
+        HashSet<String> hashSet = new HashSet<>(strings);
+
+        for (int i = 0; i < sources.length; i++) {
+            SequenceParser reader = new SequenceParser(sources[i], res, hashSet);
+            reader.start();
+        }
     }
 }

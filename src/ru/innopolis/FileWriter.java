@@ -11,6 +11,7 @@ public class FileWriter {
             FileOutputStream fos = new FileOutputStream(file, true);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             for (int i = 0; i < data.size(); i++) {
+                if(data.get(i).length() == 0) System.err.println(11111);
                 bos.write(data.get(i).concat("\n").getBytes());
             }
             bos.flush();
