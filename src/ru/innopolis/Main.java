@@ -1,9 +1,11 @@
 package ru.innopolis;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Main {
 
@@ -38,9 +40,8 @@ public class Main {
         List<String> strings = Arrays.asList(words);
         HashSet<String> hashSet = new HashSet<>(strings);
 
-        for (int i = 0; i < sources.length; i++) {
-            SequenceParser reader = new SequenceParser(sources[i], res, hashSet);
-            reader.start();
-        }
+        Arrays.stream(sources).forEach(url -> {
+            new SequenceParser(url, res, hashSet).start();
+        });
     }
 }
