@@ -3,12 +3,11 @@ package ru.innopolis;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 
 /**
- * Читает источник, разбирает его на предложения и отдает обработчику(Handler)
+ * Читает источник, разбирает его на предложения
  */
 public class SequenceParser extends Thread {
 
@@ -16,7 +15,7 @@ public class SequenceParser extends Thread {
     private String pathToFile;
     private HashSet<String> searchWords;
 
-    public final static int SEQUENCE_COUNT = 100;
+    public final static int SEQUENCE_COUNT = 300;
 
     public SequenceParser(String urlSource, String pathToFile, HashSet<String> hashSet) {
         this.urlSource = urlSource;
@@ -26,9 +25,8 @@ public class SequenceParser extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Поток чтения запущен. Читаю путь " + urlSource);
+//        System.out.println("Поток чтения запущен. Читаю путь " + urlSource);
         ArrayList<String> sequences = new ArrayList<>();
-
         try {
             URL url = new URL(urlSource);
             Scanner scanner = new Scanner(url.openStream());
@@ -46,16 +44,15 @@ public class SequenceParser extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Поток чтения завершен. Читал путь " + urlSource);
+//        System.out.println("Поток чтения завершен. Читал путь " + urlSource);
     }
 
     public Runnable getHandler(ArrayList<String> source) {
         final ArrayList<String> sequences = new ArrayList<>(source);
         final String wordSeparator = "[\\p{Punct}\\s]+";
         return () -> {
-            System.out.println("Поток сравнения начал работу");
+//            System.out.println("Поток сравнения начал работу");
             ArrayList<String> match = new ArrayList<>();
-
             sequences.stream()
                     .forEach(a -> {
                         String[] words = a.split(wordSeparator);
@@ -66,11 +63,10 @@ public class SequenceParser extends Thread {
                             }
                         }
                     });
-
             if (!match.isEmpty()) {
                 FileWriter.write(pathToFile, match);
             }
-            System.out.println("Поток сравнения завершил работу");
+//            System.out.println("Поток сравнения завершил работу");
         };
     }
 }

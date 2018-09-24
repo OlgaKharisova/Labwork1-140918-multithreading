@@ -3,6 +3,9 @@ package ru.innopolis;
 import java.io.*;
 import java.util.List;
 
+/**
+ * Записывает предложения в файл
+ */
 public class FileWriter {
 
     public static synchronized void write(String pathToFile, List<String> data) {
@@ -11,16 +14,13 @@ public class FileWriter {
             FileOutputStream fos = new FileOutputStream(file, true);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             data.stream().forEach(sequence -> {
-                                try {
-
-                                    bos.write(sequence.concat("\n").getBytes());
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                    );
-
+                        try {
+                            bos.write(sequence.concat("\n").getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+            );
             bos.flush();
             bos.close();
         } catch (IOException e) {
