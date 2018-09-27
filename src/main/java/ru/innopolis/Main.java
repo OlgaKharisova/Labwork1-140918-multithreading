@@ -1,8 +1,15 @@
 package ru.innopolis;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    private static Logger logger = LogManager.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        logger.info("Начинаю работу");
+
 //       Scanner scanner = new Scanner(System.in);
 //       scanner.nextLine();
         long time = System.currentTimeMillis();
@@ -21,6 +28,6 @@ public class Main {
 
         OccurenciesFinder main = new OccurenciesFinder();
         main.getOccurencies(sources, words, res);
-        System.out.println((System.currentTimeMillis()-time)*0.001);
+        logger.info("Врем работы приложения " + (System.currentTimeMillis()-time)*0.001 + " c.");
     }
 }

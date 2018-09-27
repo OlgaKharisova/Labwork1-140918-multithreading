@@ -1,5 +1,8 @@
 package ru.innopolis;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,11 +14,13 @@ import java.util.Scanner;
  */
 public class SequenceParser extends Thread {
 
+    private static Logger logger = LogManager.getLogger(SequenceParser.class);
+    public final static int SEQUENCE_COUNT = 300;
+
     private String urlSource;
     private String pathToFile;
     private HashSet<String> searchWords;
 
-    public final static int SEQUENCE_COUNT = 300;
 
     public SequenceParser(String urlSource, String pathToFile, HashSet<String> hashSet) {
         this.urlSource = urlSource;
@@ -25,7 +30,7 @@ public class SequenceParser extends Thread {
 
     @Override
     public void run() {
-//        System.out.println("Поток чтения запущен. Читаю путь " + urlSource);
+        logger.debug("Поток чтения запущен. Читаю путь " + urlSource);
         ArrayList<String> sequences = new ArrayList<>();
         try {
             URL url = new URL(urlSource);
@@ -42,16 +47,16 @@ public class SequenceParser extends Thread {
                 new Thread(getHandler(sequences)).start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
-//        System.out.println("Поток чтения завершен. Читал путь " + urlSource);
+        logger.debug("Поток чтения завершен. Читал путь " + urlSource);
     }
 
     public Runnable getHandler(ArrayList<String> source) {
         final ArrayList<String> sequences = new ArrayList<>(source);
         final String wordSeparator = "[\\p{Punct}\\s]+";
         return () -> {
-//            System.out.println("Поток сравнения начал работу");
+            logger.debug("getHandler начал работу");
             ArrayList<String> match = new ArrayList<>();
             sequences.stream()
                     .forEach(a -> {
@@ -67,6 +72,7 @@ public class SequenceParser extends Thread {
                 FileWriter.write(pathToFile, match);
             }
 //            System.out.println("Поток сравнения завершил работу");
+            logger.debug("getHandler завершил работу");
         };
     }
 }
